@@ -1,6 +1,7 @@
 package org.example.springoauth2resourceserver.service;
 
 import org.example.springoauth2resourceserver.dto.RegistrationContextDTO;
+import org.example.springoauth2resourceserver.dto.UserProfilResponseDTO;
 import org.example.springoauth2resourceserver.dto.UserRegistrationResponseDTO;
 import org.example.springoauth2resourceserver.entity.Roles;
 import org.example.springoauth2resourceserver.entity.User_Profile;
@@ -15,4 +16,8 @@ public interface UserService {
     void enableUser(String sub);
 
     void changeUserRole(String sub , Roles newRoleEnum);
+
+    UserProfilResponseDTO getUserProfileBySub(String sub);
+
+    UserProfilResponseDTO updateUserBio(String sub, String newBio);
 }
