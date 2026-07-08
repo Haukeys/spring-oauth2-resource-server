@@ -2,6 +2,7 @@ package org.example.springoauth2resourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.springoauth2resourceserver.dto.RegistrationContextDTO;
+import org.example.springoauth2resourceserver.dto.UserProfilResponseDTO;
 import org.example.springoauth2resourceserver.dto.UserRegistrationResponseDTO;
 import org.example.springoauth2resourceserver.entity.Roles;
 import org.example.springoauth2resourceserver.entity.User_Profile;
@@ -65,8 +66,31 @@ public class UserController {
     // Modification du rôle d'un utilisateur (Réservé ADMIN uniquement)
     @PatchMapping("/{sub}/role")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> changeUserRole(@PathVariable String sub, @RequestParam Roles role) {
+    public ResponseEntity<Void> changeUserRole(
+            @PathVariable String sub,
+            @RequestHeader("role") Roles role
+    ) {
         userService.changeUserRole(sub, role);
         return ResponseEntity.noContent().build();
+    }
+    //donne le user profile complet de l utilisateur connecter
+    // Donne le user profile complet de l'utilisateur connecté avec sa biographie
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfilResponseDTO> getUserProfile(@AuthenticationPrincipal Jwt jwt) {
+        String sub = jwt.getClaimAsString("sub");
+
+        UserProfilResponseDTO profileDto = userService.getUserProfileBySub(sub);
+        return ResponseEntity.ok(profileDto);
+    }
+
+    @PutMapping("/profile/bio")
+    public ResponseEntity<UserProfilResponseDTO> updateUserBio(
+                                                                @AuthenticationPrincipal Jwt jwt,
+                                                                @RequestBody String newBio) {
+
+        String sub = jwt.getClaimAsString("sub");
+
+        UserProfilResponseDTO updatedProfile = userService.updateUserBio(sub, newBio);
+        return ResponseEntity.ok(updatedProfile);
     }
 }
