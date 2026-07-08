@@ -13,4 +13,5 @@ public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     // Permet de récupérer l'entité Role à partir de son Enum (ADMIN, MANAGER, USER)
     Optional<Role> findByRoles(Roles roles);
+    boolean existsByRoles(Roles roles);
 }
