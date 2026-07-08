@@ -1,6 +1,7 @@
 package org.example.springoauth2resourceserver.mapper;
 
 import org.example.springoauth2resourceserver.dto.RegistrationContextDTO;
+import org.example.springoauth2resourceserver.dto.UserProfilResponseDTO;
 import org.example.springoauth2resourceserver.dto.UserRegistrationResponseDTO;
 import org.example.springoauth2resourceserver.entity.User_Profile;
 import org.mapstruct.Mapper;
@@ -30,6 +31,12 @@ public interface UserMapper {
     @Mapping(target = "isActive", source = "userUuid.isActive")
     @Mapping(target = "roles", source = "userUuid.roles", qualifiedByName = "mapRoles")
     UserRegistrationResponseDTO toResponseDto(User_Profile profile);
+
+
+    @Mapping(target = "idProfile", source = "idProfile")
+    @Mapping(target = "biography", source = "biography")
+    @Mapping(target = "name", source = "name")
+    UserProfilResponseDTO toProfileResponseDto(User_Profile profile);
 
     /*
      * EXPLICATION DE LA MÉTHODE MAPROLES :
