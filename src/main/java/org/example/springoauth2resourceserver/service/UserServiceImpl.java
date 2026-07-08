@@ -2,6 +2,7 @@ package org.example.springoauth2resourceserver.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.springoauth2resourceserver.dto.RegistrationContextDTO;
+import org.example.springoauth2resourceserver.dto.UserProfilResponseDTO;
 import org.example.springoauth2resourceserver.dto.UserRegistrationResponseDTO;
 import org.example.springoauth2resourceserver.entity.Role;
 import org.example.springoauth2resourceserver.entity.Roles;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserRegistrationResponseDTO signUp(RegistrationContextDTO context) {
-        // 1. Conversion interne du DTO vers l'entité User_Profile via le Mapper
+        // Conversion interne du DTO vers l'entité User_Profile via le Mapper
         User_Profile profile = userMapper.toEntity(context);
 
         // 2. Vérification de l'existence via le SUB Cognito
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("USER ALREADY REGISTER WITH THIS COGNITO SUB.");
         }
 
-        // 3. Récupération du rôle USER ou création automatique s'il n'existe pas en BDD
+        // Récupération du rôle USER ou création automatique s'il n'existe pas en BDD
         Role userRole = roleRepository.findByRoles(Roles.USER)
                 .orElseGet(() -> {
                     Role newRole = new Role();
@@ -48,15 +49,15 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
 
-        // 4. Liaison du rôle à l'entité User imbriquée
+        // Liaison du rôle à l'entité User imbriquée
         profile.getUserUuid().setRoles(roles);
 
-        // 5. Persistance des entités
+        // Persistance des entités
         User savedUser = userRepository.save(profile.getUserUuid());
         profile.setUserUuid(savedUser);
         User_Profile savedProfile = userProfileRepository.save(profile);
 
-        // 6. Conversion finale vers le DTO de réponse pour le contrôleur
+        // Conversion finale vers le DTO de réponse pour le contrôleur
         return userMapper.toResponseDto(savedProfile);
     }
 
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
     public User_Profile getUserInfo(String sub) {
         User user = userRepository.findBySub(sub)
                 .orElseThrow(() -> new RuntimeException("USER NOT FOUND."));
-        return userProfileRepository.findByUserUuid(user.getUuid())
+        return userProfileRepository.findByUserUuid(user)//ex probleme resolu probleme de type sw
                 .orElseThrow(() -> new RuntimeException("PROFILE NOT FOUND."));
     }
 
@@ -96,10 +97,32 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByRoles(newRoleEnum)
                 .orElseThrow(() -> new RuntimeException("SPECIFIED ROLE NOT FOUND."));
 
+        // créez un tout nouvel ensemble (Set) vide
         Set<Role> roles = new HashSet<>();
+
+        // ajout SEULEMENT le nouveau rôle (exemple : MANAGER)
         roles.add(role);
+
+        // ÉCRASEZ l'ancien Set de l'utilisateur avec le nouveau
         user.setRoles(roles);
 
         userRepository.save(user);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public UserProfilResponseDTO getUserProfileBySub(String sub) {
+        User_Profile profile = getUserInfo(sub);
+        return userMapper.toProfileResponseDto(profile); // Utilisation de la nouvelle méthode du mapper
+    }
+
+    @Override
+    @Transactional
+    public UserProfilResponseDTO updateUserBio(String sub, String newBio) {
+        User_Profile profile = getUserInfo(sub);
+
+        profile.setBiography(newBio);
+        User_Profile updatedProfile = userProfileRepository.save(profile);
+
+        return userMapper.toProfileResponseDto(updatedProfile); // Utilisation de la nouvelle méthode du mapper
     }
 }
