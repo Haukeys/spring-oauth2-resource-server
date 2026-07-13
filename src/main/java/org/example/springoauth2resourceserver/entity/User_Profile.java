@@ -28,6 +28,10 @@ public class User_Profile extends Auditable{
     @JoinColumn(name = "user_uuid", nullable = false, unique = true)
     private User userUuid;
 
+    // AJOUT : Le pseudo est optionnel au départ mais doit être unique dès qu'il est rempli
+    @Column(unique = true, length = 50)
+    private String nickname;
+
     @Column(nullable = false)
     private String name;
 
