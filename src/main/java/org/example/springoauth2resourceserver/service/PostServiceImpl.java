@@ -8,6 +8,8 @@ import org.example.springoauth2resourceserver.entity.Post;
 import org.example.springoauth2resourceserver.entity.User_Profile;
 import org.example.springoauth2resourceserver.repository.PostRepository;
 import org.example.springoauth2resourceserver.repository.UserProfileRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +23,12 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserProfileRepository userProfileRepository;
 
-    public Post createPost(String title, List<MediaContent> contentBlocks, String sub) { // Changé "name" par "sub"
-        // 1. Chercher le profil de l'utilisateur dans MySQL via son sub
+    public Post createPost(String title, List<MediaContent> contentBlocks, String sub) {
+        // Chercher le profil de l'utilisateur dans MySQL via son sub
         User_Profile profile = userProfileRepository.findByUserUuid_Sub(sub)
                 .orElseThrow(() -> new RuntimeException("USER PROFILE NOT FOUND"));
 
-        // 2. Vérifier si le nickname est vide
+        // Vérifier si le nickname est vide
         if (profile.getNickname() == null || profile.getNickname().isBlank()) {
             throw new IllegalStateException("A unique nickname is required before you can create a post.");
         }
@@ -56,11 +58,11 @@ public class PostServiceImpl implements PostService{
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("POST NOT FOUND"));
 
-        // 1. Chercher le profil de l'utilisateur dans MySQL via son sub
+        // Chercher le profil de l'utilisateur dans MySQL via son sub
         User_Profile profile = userProfileRepository.findByUserUuid_Sub(sub)
                 .orElseThrow(() -> new RuntimeException("USER PROFILE NOT FOUND"));
 
-        // 2. Vérifier si le nickname est vide
+        // Vérifier si le nickname est vide
         if (profile.getNickname() == null || profile.getNickname().isBlank()) {
             throw new IllegalStateException("A unique nickname is required before you can post a comment.");
         }
@@ -138,5 +140,9 @@ public class PostServiceImpl implements PostService{
             throw new RuntimeException("POST NOT FOUND");
         }
         postRepository.deleteById(postId);
+    }
+    @Override
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 }
