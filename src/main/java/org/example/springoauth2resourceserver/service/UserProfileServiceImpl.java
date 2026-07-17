@@ -21,7 +21,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         // 1. Vérifier si le pseudo est déjà pris dans MySQL
         if (userProfileRepository.existsByNickname(nickname)) {
             // On lève une exception que Spring pourra intercepter, ou une RuntimeException basique
-            throw new IllegalArgumentException("The nickname '" + nickname + "' is already taken.");
+            throw new IllegalArgumentException("The nickname '" + nickname + "' is already used.");
         }
 
         // 2. Récupérer le profil de l'utilisateur connecté
