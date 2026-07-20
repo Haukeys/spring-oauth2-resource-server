@@ -2,11 +2,11 @@ package org.example.springoauth2resourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.example.springoauth2resourceserver.dto.PostPageResponse;
 import org.example.springoauth2resourceserver.dto.PostRequest;
 import org.example.springoauth2resourceserver.entity.MediaContent;
 import org.example.springoauth2resourceserver.entity.Post;
 import org.example.springoauth2resourceserver.service.PostService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -93,14 +93,13 @@ public class PostController {
         return ResponseEntity.ok(Collections.singletonMap("message", "The comment has been deleted by the moderation team."));
     }
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(
+    public ResponseEntity<PostPageResponse> getAllPosts(
             @RequestParam(defaultValue = "0") int page,  // Index de la page (commence à 0)
             @RequestParam(defaultValue = "10") int size  // Nombre de posts par page
     ) {
         // Crée un objet Pageable configuré pour trier par l'id MongoDB de manière décroissante
         // (L'id MongoDB intégrant le timestamp, cela trie automatiquement du plus récent au plus ancien)
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-
         return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 }
