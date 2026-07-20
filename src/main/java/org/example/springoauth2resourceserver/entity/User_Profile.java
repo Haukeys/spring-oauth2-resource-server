@@ -1,5 +1,6 @@
 package org.example.springoauth2resourceserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Audited;
@@ -24,6 +25,7 @@ public class User_Profile extends Auditable{
     @Column(name="id_profile")
     private UUID idProfile;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uuid", nullable = false, unique = true)
     private User userUuid;
