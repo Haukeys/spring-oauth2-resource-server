@@ -19,9 +19,14 @@ public class UserProfilResponseDTO {
     private String surname;
     private String avatar_url;
     private String biography;
-
+    //ajout de nickname pour match avec le nouvel object complet
+    private String nickname;
     //champs d'auditing optionnels si le client doit les afficher
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
+    // Métriques du Follow
+    private long followersCount;  // Nombre d'abonnés
+    private long followingCount;  // Nombre d'abonnements
+    private boolean followedByMe; // Est-ce que l'utilisateur connecté le suit ?
 }
