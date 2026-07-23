@@ -17,6 +17,9 @@ public interface UserProfileRepository extends JpaRepository<User_Profile, UUID>
     // Permet de trouver le profil en traversant l'entité User jusqu'à son champ 'sub'
     Optional<User_Profile> findByUserUuid_Sub(String sub);
 
+    // Permet de rechercher un profil à partir de son pseudonyme unique
+    Optional<User_Profile> findByNickname(String nickname);
+
     // Permet de vérifier si un pseudo est déjà pris par quelqu'un d'autre
     boolean existsByNickname(String nickname);
 
