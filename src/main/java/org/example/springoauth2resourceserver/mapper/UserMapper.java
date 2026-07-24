@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+// AJOUTER LES TARGET AUX ELEMENTS QUE L ONT AJOUTER PROGRESSIVEMENT ET QUE L ON VEUX MONTRER DANS LE RETOUR
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
@@ -36,6 +36,7 @@ public interface UserMapper {
     @Mapping(target = "idProfile", source = "idProfile")
     @Mapping(target = "biography", source = "biography")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "nickname", source = "nickname")
     UserProfilResponseDTO toProfileResponseDto(User_Profile profile);
 
     /*
