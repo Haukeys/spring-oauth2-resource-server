@@ -122,7 +122,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new RuntimeException("POST NOT FOUND"));
 
         if (!post.getCreatedBy().equals(sub)) {
-            throw new AccessDeniedException("Vous n'êtes pas l'auteur.");
+            throw new AccessDeniedException("YOUR ARE NOT THE AUTHOR.");
         }
         postRepository.delete(post);
     }
@@ -152,7 +152,7 @@ public class PostServiceImpl implements PostService {
 
         // Seul l'auteur du commentaire a le droit de le supprimer ici
         if (!comment.getCreatedBy().equals(sub)) {
-            throw new AccessDeniedException("Vous n'êtes pas l'auteur de ce commentaire.");
+            throw new AccessDeniedException("YOUR ARE NOT THE AUTHOR OF THIS COMMENT.");
         }
 
         post.getComments().remove(comment);
