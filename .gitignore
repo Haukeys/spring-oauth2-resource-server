@@ -34,3 +34,5 @@ build/
 .env
 src/test
 docs.md
+
+secrets
