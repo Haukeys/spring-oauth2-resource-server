@@ -43,6 +43,9 @@ public class User_Profile extends Auditable{
     @Column(name="avatar_url")
     private String avatar_url;
 
+    @Column(name = "original_avatar_url")
+    private String originalAvatarUrl; // Lien S3 d'origine (enregistré dès l'upload)
+
     @Column(columnDefinition = "TEXT")//optimiser pour des biografie longue dans MySQL
     private String biography;
 }
